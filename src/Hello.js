@@ -4,6 +4,27 @@ import React from 'react';
 function Hello({ color, name, isSpecial }) {
   return (
     <div style={{ color }}>
+      {isSpecial && <b>*</b>}
+      안녕하세요 {name}
+    </div>
+  );
+}
+
+Hello.defaultProps = {
+  name: '이름없음'
+}
+
+export default Hello;
+// isSpecial && <b>*</b> 의 결과는 isSpecial 이 false 일땐 false 이고, isSpecial이 true 일 땐 <b>*</b> 가된다.
+// https://learnjs.vlpt.us/useful/03-short-circuiting.html <--모르면 단축평가논리법 보고 참고
+
+
+/*
+import React from 'react';
+
+function Hello({ color, name, isSpecial }) {
+  return (
+    <div style={{ color }}>
       { isSpecial ? <b>*</b> : null }
       안녕하세요 {name}
     </div>
@@ -17,6 +38,7 @@ Hello.defaultProps = {
 export default Hello;
 // isSpecial 값이 true라면 <b>*</b>를, 그렇지 않다면 null이 나오게 만듬.
 // JSX에서 null, false, undefined를 렌더링하게된다면 아무것도 나타나지 않는다.
+*/
 
 /*
 import React from 'react';
