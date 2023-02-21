@@ -1,6 +1,86 @@
 
 import React from 'react';
 import Hello from './Hello';
+import Wrapper from './Wrapper';
+
+
+function App() {
+  return (
+    <Wrapper>
+      <Hello name="react" color="red" isSpecial={true}/>
+      <Hello color="pink" />
+    </Wrapper>
+  )
+}
+//true는 자바스크립트 값이라 중괄호로 표시.
+// 컴포넌트 내에서 isSpecial이 true냐 falde냐에 따라 컴포넌트 좌측에 *표시하기
+// 위에철럼 처리하는 기본적인 방법은 삼항연산자 사용
+
+export default App;
+
+
+/*
+import React from 'react';
+import Hello from './Hello';
+import Wrapper from './Wrapper';
+
+function App() {
+  return (
+    <Wrapper>
+      <Hello name="react" color="red"/>
+      <Hello color="pink"/>
+    </Wrapper>
+  );
+}
+
+export default App;
+*/
+
+/*
+import React from 'react';
+import Hello from './Hello';
+
+function App() {
+  return (
+    <>
+      <Hello name="react" color="red"/>
+      <Hello color="pink"/>
+    </>
+  );
+}
+
+export default App;
+*/
+
+/*
+import React from 'react';
+import Hello from './Hello';
+
+function App() {
+  return (
+    <Hello name="react" color="red"/>
+  );
+}
+
+export default App;
+*/
+
+/*
+import React from 'react';
+import Hello from './Hello';
+
+function App() {
+  return (
+    <Hello name="react" />
+  );
+}
+
+export default App;
+*/
+
+/*
+import React from 'react';
+import Hello from './Hello';
 import './App.css';
 
 
@@ -15,8 +95,9 @@ function App() {
 
   return (
     <>
-      {/* 주석은 화면에 보이지 않습니다 */}
-      /* 중괄호로 감싸지 않으면 화면에 보입니다 */
+      { 주석은 화면에 보이지 않습니다 
+       중괄호로 감싸지 않으면 화면에 보입니다 
+      
       <Hello 
       />
       <div style={style}>{name}</div>
@@ -26,7 +107,8 @@ function App() {
 }
 
 export default App;
-// JSX 내부주석은 {/* 이런형태로 */} 작성됨
+// JSX 내부주석은 { 이런형태로  작성됨
+*/
 
 /*
 import React from 'react';
