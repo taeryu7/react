@@ -1,5 +1,32 @@
 
 import React from 'react';
+import InputSample from './InputSample';
+
+function App() {
+  return (
+    <InputSample />
+  );
+}
+
+export default App;
+
+
+/*
+// Counter.js를 위한 코드
+import React from 'react';
+import Counter from './Counter';
+
+function App() {
+  return (
+    <Counter />
+  );
+}
+
+export default App;
+*/
+
+/*
+import React from 'react';
 import Hello from './Hello';
 import Wrapper from './Wrapper';
 
@@ -16,7 +43,7 @@ export default App;
 // props 값 설정을 생략하면 ={true}
 // 컴포넌트의 props 값을 설정하게 될 때 만약 props 이름만 작성하고 값 설정을 생략한다면, 이를 true 로 설정한 것으로 간주
 // 이렇게 isSpecial 이름만 넣어주면 isSpecial={true} 와 동일한 의미입니다.
-
+/
 
 /*
 import React from 'react';
@@ -224,7 +251,7 @@ export default App;
  */
 
  /*
- * JSX 내부에 자바스크립트 변수를 보여줘야 할 때에는 {} 으로 감싸서 보여준다.
+ JSX 내부에 자바스크립트 변수를 보여줘야 할 때에는 {} 으로 감싸서 보여준다.
 
  import React from 'react';
  import Hello from './Hello';
