@@ -50,6 +50,8 @@ function App() {
 }
 
 export default App;
+// useRef() 를 사용 할 때 파라미터를 넣어주면, 이 값이 .current 값의 기본값이된다.
+// 이 값을 수정 할 때 .current 값을 수정하면 되고, 조회할 때는 .current를 조회하면 된다.
 
 
 /*
