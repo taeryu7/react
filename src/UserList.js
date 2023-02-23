@@ -1,4 +1,76 @@
 
+// 배열에 항목 수정하기
+import React from 'react';
+
+function User({ user, onRemove, onToggle }) {
+  return (
+    <div>
+      <b
+        style={{
+          cursor: 'pointer',
+          color: user.active ? 'green' : 'black'
+        }}
+        onClick={() => onToggle(user.id)}
+      >
+        {user.username}
+      </b>
+      &nbsp;
+      <span>({user.email})</span>
+      <button onClick={() => onRemove(user.id)}>삭제</button>
+    </div>
+  );
+}
+
+function UserList({ users, onRemove, onToggle }) {
+  return (
+    <div>
+      {users.map(user => (
+        <User
+          user={user}
+          key={user.id}
+          onRemove={onRemove}
+          onToggle={onToggle}
+        />
+      ))}
+    </div>
+  );
+}
+
+export default UserList;
+
+
+
+/*
+// 배열의 항목 제거하기
+import React from 'react';
+
+function User({ user, onRemove }) {
+  return (
+    <div>
+      <b>{user.username}</b> <span>({user.email})</span>
+      <button onClick={() => onRemove(user.id)}>삭제</button>
+    </div>
+  );
+}
+
+function UserList({ users, onRemove }) {
+  return (
+    <div>
+      {users.map(user => (
+        <User user={user} key={user.id} onRemove={onRemove} />
+      ))}
+    </div>
+  );
+}
+export default UserList;
+// 위 코드에서 user컴포넌트의 삭제버튼이 클릭 될 때 user.id 값을 앞으로 props로 받아올 onRemove 함수의 파라미터로 넣어서 호출해야한다.
+// onRemove는 "id 가 __인 객체를 삭제해라" 라는 역할을 가지고있다. 
+// onRemove 함수는 UserList에도 전달 받을 것이며, 이를 그대로 User 컴포넌트에 전달해줄것이다.
+// 불변성을 지키면서 특정 원소를 배열에서 제거하기위해서는 filter 배열 내장 함수를 사용하는것이 가장 편하다.
+// 이 함수는 배열에서 특정 조건을 만족하는 원소들만 추출해서 새로운 배열을 만들어준다.
+*/
+
+/*
 // useRef 로 컴포넌트 안의 변수 만들기
 import React from 'react';
 
@@ -21,6 +93,7 @@ function UserList({ users }) {
 }
 
 export default UserList;
+*/
 
 /*
 // 배열 렌더링 하기
@@ -76,9 +149,9 @@ export default UserList;
 // 경고가 뜨는 이유는 각 원소에 key가 있어야만 배열이 업데이트 될 때 효율적으로 렌저딩이 될 수 있기 때문이다.
 */
 
+/*
 //key의 존재유무에 따른 업데이트 방식
 
-/*
 예를들어 이런 배열이 있다고 가정 할 시
 const array = ['a', 'b', 'c', 'd'];
 

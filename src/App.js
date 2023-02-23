@@ -1,4 +1,302 @@
 
+// 배열에 항목 수정하기
+// 아래코드는 User 컴포넌트에 계정명을 클릭했을 때 색상이 초록색으로 바뀌고, 다시누르면 검정색으로 바뀌게 구현하는 코드다.
+// 배열의 불변성을 유지하면서 배열을 업데이트 할 떄 에도 map함수를 사용 할 수 있다.
+// id값을 비쇼해서 id가 다르면 그대로 두고, 같다면 active 값을 반전시키도록 구현을 하면 된다.
+
+import React, { useRef, useState } from 'react';
+import UserList from './UserList';
+import CreateUser from './CreateUser';
+
+function App() {
+  const [inputs, setInputs] = useState({
+    username: '',
+    email: ''
+  });
+  const { username, email } = inputs;
+  const onChange = e => {
+    const { name, value } = e.target;
+    setInputs({
+      ...inputs,
+      [name]: value
+    });
+  };
+  const [users, setUsers] = useState([
+    {
+      id: 1,
+      username: 'velopert',
+      email: 'public.velopert@gmail.com',
+      active: true
+    },
+    {
+      id: 2,
+      username: 'tester',
+      email: 'tester@example.com',
+      active: false
+    },
+    {
+      id: 3,
+      username: 'liz',
+      email: 'liz@example.com',
+      active: false
+    }
+  ]);
+
+  const nextId = useRef(4);
+  const onCreate = () => {
+    const user = {
+      id: nextId.current,
+      username,
+      email
+    };
+    setUsers(users.concat(user));
+
+    setInputs({
+      username: '',
+      email: ''
+    });
+    nextId.current += 1;
+  };
+
+  const onRemove = id => {
+    // user.id 가 파라미터로 일치하지 않는 원소만 추출해서 새로운 배열을 만듬
+    // = user.id 가 id 인 것을 제거함
+    setUsers(users.filter(user => user.id !== id));
+  };
+  const onToggle = id => {
+    setUsers(
+      users.map(user =>
+        user.id === id ? { ...user, active: !user.active } : user
+      )
+    );
+  };
+  return (
+    <>
+      <CreateUser
+        username={username}
+        email={email}
+        onChange={onChange}
+        onCreate={onCreate}
+      />
+      <UserList users={users} onRemove={onRemove} onToggle={onToggle} />
+    </>
+  );
+}
+
+export default App;
+
+/*
+//배열에 항목 제거하기
+import React, { useRef, useState } from 'react';
+import UserList from './UserList';
+import CreateUser from './CreateUser';
+
+function App() {
+  const [inputs, setInputs] = useState({
+    username: '',
+    email: ''
+  });
+  const { username, email } = inputs;
+  const onChange = e => {
+    const { name, value } = e.target;
+    setInputs({
+      ...inputs,
+      [name]: value
+    });
+  };
+  const [users, setUsers] = useState([
+    {
+      id: 1,
+      username: 'velopert',
+      email: 'public.velopert@gmail.com'
+    },
+    {
+      id: 2,
+      username: 'tester',
+      email: 'tester@example.com'
+    },
+    {
+      id: 3,
+      username: 'liz',
+      email: 'liz@example.com'
+    }
+  ]);
+
+  const nextId = useRef(4);
+  const onCreate = () => {
+    const user = {
+      id: nextId.current,
+      username,
+      email
+    };
+    setUsers(users.concat(user));
+
+    setInputs({
+      username: '',
+      email: ''
+    });
+    nextId.current += 1;
+  };
+
+  const onRemove = id => {
+    // user.id 가 파라미터로 일치하지 않는 원소만 추출해서 새로운 배열을 만듬
+    // = user.id 가 id 인 것을 제거함
+    setUsers(users.filter(user => user.id !== id));
+  };
+  return (
+    <>
+      <CreateUser
+        username={username}
+        email={email}
+        onChange={onChange}
+        onCreate={onCreate}
+      />
+      <UserList users={users} onRemove={onRemove} />
+    </>
+  );
+}
+
+export default App;
+*/
+
+/*
+// 배열에 변화를 줄 때 객체와 마찬가지로 불변성을 지켜주어야한다. 그렇기 때문에 배열의 push, splice, sort등의 함수를 쓰면 안된다.
+// 만약 사용해야 된다면, 기존의 배열을 한번 복사하고 나서 사용해야한다.
+// 불변성을 지키면서 배열에 새 항목을 추가하는 방법은 두가지가 있다.
+// 첫번째는 spread 연산자를 사용한다.
+
+import React, { useRef, useState } from 'react';
+import UserList from './UserList';
+import CreateUser from './CreateUser';
+
+function App() {
+  const [inputs, setInputs] = useState({
+    username: '',
+    email: ''
+  });
+  const { username, email } = inputs;
+  const onChange = e => {
+    const { name, value } = e.target;
+    setInputs({
+      ...inputs,
+      [name]: value
+    });
+  };
+  const [users, setUsers] = useState([
+    {
+      id: 1,
+      username: 'velopert',
+      email: 'public.velopert@gmail.com'
+    },
+    {
+      id: 2,
+      username: 'tester',
+      email: 'tester@example.com'
+    },
+    {
+      id: 3,
+      username: 'liz',
+      email: 'liz@example.com'
+    }
+  ]);
+
+  const nextId = useRef(4);
+  const onCreate = () => {
+    const user = {
+      id: nextId.current,
+      username,
+      email
+    };
+    setUsers([...users, user]);
+
+    setInputs({
+      username: '',
+      email: ''
+    });
+    nextId.current += 1;
+  };
+  return (
+    <>
+      <CreateUser
+        username={username}
+        email={email}
+        onChange={onChange}
+        onCreate={onCreate}
+      />
+      <UserList users={users} />
+    </>
+  );
+}
+export default App;
+
+
+// 또 다른 반법으로은 concat 함수를 사용하는 것이다. concat함수는 기존의 배열을 수정하지 않고, 새로운 원소가 추가된 새로운 배열은 만들어준다.
+import React, { useRef, useState } from 'react';
+import UserList from './UserList';
+import CreateUser from './CreateUser';
+
+function App() {
+  const [inputs, setInputs] = useState({
+    username: '',
+    email: ''
+  });
+  const { username, email } = inputs;
+  const onChange = e => {
+    const { name, value } = e.target;
+    setInputs({
+      ...inputs,
+      [name]: value
+    });
+  };
+  const [users, setUsers] = useState([
+    {
+      id: 1,
+      username: 'velopert',
+      email: 'public.velopert@gmail.com'
+    },
+    {
+      id: 2,
+      username: 'tester',
+      email: 'tester@example.com'
+    },
+    {
+      id: 3,
+      username: 'liz',
+      email: 'liz@example.com'
+    }
+  ]);
+
+  const nextId = useRef(4);
+  const onCreate = () => {
+    const user = {
+      id: nextId.current,
+      username,
+      email
+    };
+    setUsers(users.concat(user));
+
+    setInputs({
+      username: '',
+      email: ''
+    });
+    nextId.current += 1;
+  };
+  return (
+    <>
+      <CreateUser
+        username={username}
+        email={email}
+        onChange={onChange}
+        onCreate={onCreate}
+      />
+      <UserList users={users} />
+    </>
+  );
+}
+
+export default App;
+*/
+
 /*
 useRef 로 컴포넌트 안의 변수 만들기
 
@@ -22,7 +320,6 @@ scroll 위치
 
 지금은 우리가 UserList 컴포넌트 내부에서 배열을 직접 선언해서 사용을 하고 있는데, 이렇게 UserList 에서 선언해서 사용하는 대신
 이 배열을 App 에서 선언하고 UserList 에게 props 로 전달을 해보자.
-*/
 
 import React from 'react';
 
@@ -52,7 +349,7 @@ function App() {
 export default App;
 // useRef() 를 사용 할 때 파라미터를 넣어주면, 이 값이 .current 값의 기본값이된다.
 // 이 값을 수정 할 때 .current 값을 수정하면 되고, 조회할 때는 .current를 조회하면 된다.
-
+*/
 
 /*
 import React from "react";
