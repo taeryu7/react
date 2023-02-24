@@ -1,6 +1,52 @@
 
 
+// Context AOI를 사용한 전역 값 관리
 
+import React, { useContext } from 'react';
+import { UserDispatch } from './App';
+
+const User = React.memo(function User({ user }) {
+  const dispatch = useContext(UserDispatch);
+
+  return (
+    <div>
+      <b
+        style={{
+          cursor: 'pointer',
+          color: user.active ? 'green' : 'black'
+        }}
+        onClick={() => {
+          dispatch({ type: 'TOGGLE_USER', id: user.id });
+        }}
+      >
+        {user.username}
+      </b>
+      &nbsp;
+      <span>({user.email})</span>
+      <button
+        onClick={() => {
+          dispatch({ type: 'REMOVE_USER', id: user.id });
+        }}
+      >
+        삭제
+      </button>
+    </div>
+  );
+});
+
+function UserList({ users }) {
+  return (
+    <div>
+      {users.map(user => (
+        <User user={user} key={user.id} />
+      ))}
+    </div>
+  );
+}
+
+export default React.memo(UserList);
+
+/*
 // 커스텀 Hooks 만들기
 import React, { useRef, useReducer, useMemo, useCallback } from 'react';
 import UserList from './UserList';
@@ -110,7 +156,7 @@ function App() {
 
 export default App;
 // 커스텀 Hook 을 만들어서 사용하면 컴포넌트의 로직을 분리시켜서 필요 할 때 쉽게 재사용 할 수도 있다.
-
+*/
 
 /*
 // APP 컴포넌트를 useReduce로 구현하기
@@ -255,7 +301,6 @@ const [value, setValue] = useState(true);
 
 
 */
-
 
 /*
 // React.memo 를 사용한 컴포넌트 리렌더링 방지

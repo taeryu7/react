@@ -1,5 +1,43 @@
 
 
+
+// Context AOI를 사용한 전역 값 관리
+import React from 'react';
+
+const User = React.memo(function User({ user }) {
+  return (
+    <div>
+      <b
+        style={{
+          cursor: 'pointer',
+          color: user.active ? 'green' : 'black'
+        }}
+        onClick={() => {}}
+      >
+        {user.username}
+      </b>
+      &nbsp;
+      <span>({user.email})</span>
+      <button onClick={() => {}}>삭제</button>
+    </div>
+  );
+});
+
+function UserList({ users }) {
+  return (
+    <div>
+      {users.map(user => (
+        <User user={user} key={user.id} />
+      ))}
+    </div>
+  );
+}
+
+export default React.memo(UserList);
+
+
+
+/*
 // React.memo 를 사용한 컴포넌트 리렌더링 방지
 import React from 'react';
 
@@ -41,7 +79,7 @@ export default React.memo(UserList);
 // deps 에 users 가 들어있기 때문에 배열이 바뀔때마다 함수가 새로 만들어지는건, 당연하다.
 // 이걸 최적화하고 싶다면 deps 에서 users 를 지우고, 함수들에서 현재 useState 로 관리하는 users 를 참조하지 않게 한다.
 // 함수형 업데이트를 하게 되면, setUsers 에 등록하는 콜백함수의 파라미터에서 최신 users 를 참조 할 수 있기 때문에 deps 에 users 를 넣지 않아도됨.
-
+*/
 
 /*
 //useEffect를 사용해서 마운트/언마운트/업데이트 할 작업 설정하기
