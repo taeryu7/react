@@ -1,4 +1,151 @@
 
+
+
+// APP 컴포넌트를 useReduce로 구현하기
+
+import React, { useRef, useReducer, useMemo, useCallback } from 'react';
+import UserList from './UserList';
+import CreateUser from './CreateUser';
+
+function countActiveUsers(users) {
+  console.log('활성 사용자 수를 세는중...');
+  return users.filter(user => user.active).length;
+}
+
+const initialState = {
+  inputs: {
+    username: '',
+    email: ''
+  },
+  users: [
+    {
+      id: 1,
+      username: 'velopert',
+      email: 'public.velopert@gmail.com',
+      active: true
+    },
+    {
+      id: 2,
+      username: 'tester',
+      email: 'tester@example.com',
+      active: false
+    },
+    {
+      id: 3,
+      username: 'liz',
+      email: 'liz@example.com',
+      active: false
+    }
+  ]
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'CHANGE_INPUT':
+      return {
+        ...state,
+        inputs: {
+          ...state.inputs,
+          [action.name]: action.value
+        }
+      };
+    case 'CREATE_USER':
+      return {
+        inputs: initialState.inputs,
+        users: state.users.concat(action.user)
+      };
+    case 'TOGGLE_USER':
+      return {
+        ...state,
+        users: state.users.map(user =>
+          user.id === action.id ? { ...user, active: !user.active } : user
+        )
+      };
+    case 'REMOVE_USER':
+      return {
+        ...state,
+        users: state.users.filter(user => user.id !== action.id)
+      };
+    default:
+      return state;
+  }
+}
+
+function App() {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const nextId = useRef(4);
+
+  const { users } = state;
+  const { username, email } = state.inputs;
+
+  const onChange = useCallback(e => {
+    const { name, value } = e.target;
+    dispatch({
+      type: 'CHANGE_INPUT',
+      name,
+      value
+    });
+  }, []);
+
+  const onCreate = useCallback(() => {
+    dispatch({
+      type: 'CREATE_USER',
+      user: {
+        id: nextId.current,
+        username,
+        email
+      }
+    });
+    nextId.current += 1;
+  }, [username, email]);
+
+  const onToggle = useCallback(id => {
+    dispatch({
+      type: 'TOGGLE_USER',
+      id
+    });
+  }, []);
+
+  const onRemove = useCallback(id => {
+    dispatch({
+      type: 'REMOVE_USER',
+      id
+    });
+  }, []);
+
+  const count = useMemo(() => countActiveUsers(users), [users]);
+  return (
+    <>
+      <CreateUser
+        username={username}
+        email={email}
+        onChange={onChange}
+        onCreate={onCreate}
+      />
+      <UserList users={users} onToggle={onToggle} onRemove={onRemove} />
+      <div>활성사용자 수 : {count}</div>
+    </>
+  );
+}
+
+export default App;
+
+/*
+useReducer vs useState - 뭐 쓸까?
+
+떨 때 useReducer 를 쓰고 어떨 때 useState 를 써야 할까? 여기에 있어서는 정해진 답은 없다.
+상황에 따라 불편할 수도 있고 편할 수 도 있다.
+
+예를 들어서 컴포넌트에서 관리하는 값이 딱 하나고, 그 값이 단순한 숫자, 문자열 또는 boolean 값이라면 확실히 useState 로 관리하는게 편하다.
+const [value, setValue] = useState(true);
+
+하지만, 만약에 컴포넌트에서 관리하는 값이 여러개가 되어서 상태의 구조가 복잡해진다면 useReducer로 관리하는 것이 편해질 수도 있다.
+
+
+*/
+
+
+/*
 // React.memo 를 사용한 컴포넌트 리렌더링 방지
 
 import React, { useRef, useState, useMemo, useCallback } from 'react';
@@ -89,13 +236,13 @@ function App() {
 
 export default App;
 
-// 리액트 개발을 하실 때, useCallback, useMemo, React.memo 는 컴포넌트의 성능을 실제로 개선할수있는 상황에서만 써야한다.
+// 리액트 개발을 할 때, useCallback, useMemo, React.memo 는 컴포넌트의 성능을 실제로 개선할수있는 상황에서만 써야한다.
 // 예를 들어서, User 컴포넌트에 b 와 button 에 onClick 으로 설정해준 함수들은,
 // 해당 함수들을 useCallback 으로 재사용한다고 해서 리렌더링을 막을 수 있는것은 아니므로, 굳이 그렇게 할 필요 없다.
 // 렌더링 최적화 하지 않을 컴포넌트에 React.memo 를 사용하는것은,
 // 불필요한 props 비교만 하는 것이기 때문에 실제로 렌더링을 방지할수있는 상황이 있는 경우에만 사용해야한다.
 // React.memo 에서 두번째 파라미터에 propsAreEqual 이라는 함수를 사용하여 특정 값들만 비교를 하는 것도 가능.
-/*
+
 export default React.memo(
   UserList,
   (prevProps, nextProps) => prevProps.users === nextProps.users
@@ -106,7 +253,6 @@ onToggle 과 onRemove 에서 최신 users 배열을 참조하지 않으므로 �
 
 
 */
-
 
 /*
 // useCallback 을 사용하여 함수 재사용하기
