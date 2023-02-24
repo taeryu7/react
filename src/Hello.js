@@ -1,4 +1,27 @@
 
+// 클래스형 컴포넌트
+import React, { Component } from 'react';
+
+class Hello extends Component {
+  render() {
+    const { color, name, isSpecial } = this.props;
+    return (
+      <div style={{ color }}>
+        {isSpecial && <b>*</b>}
+        안녕하세요 {name}
+      </div>
+    );
+  }
+}
+
+Hello.defaultProps = {
+  name: '이름없음'
+};
+
+export default Hello;
+
+
+/*
 import React from 'react';
 
 function Hello({ color, name, isSpecial }) {
@@ -17,7 +40,7 @@ Hello.defaultProps = {
 export default Hello;
 // isSpecial && <b>*</b> 의 결과는 isSpecial 이 false 일땐 false 이고, isSpecial이 true 일 땐 <b>*</b> 가된다.
 // https://learnjs.vlpt.us/useful/03-short-circuiting.html <--모르면 단축평가논리법 보고 참고
-
+*/
 
 /*
 import React from 'react';
@@ -55,7 +78,8 @@ export default Hello;
 // 컴포넌트에 props를 지정하지 않았을 때 기본적으로 사용할 겂을 설정하고 싶다면 컴포넌트에 defaultprops 라는 값을 설정하면 된다.
 */
 
-/*import React from 'react';
+/*
+import React from 'react';
 
 function Hello({ color, name }) {
   return <div style={{ color }}>안녕하세요 {name}</div>
@@ -76,7 +100,6 @@ export default Hello;
 // 컴포넌트에게 전달되는 props는 파라미터를 통해서 조회할 수 있다.
 // props는 객체형태로 전달되며, 만약 name값을 조회하고 싶으면 props.name을 조회하면 된다.
 */
-
 
 /*
 import React from "react";

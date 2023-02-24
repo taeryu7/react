@@ -1,4 +1,20 @@
 
+// 클래스형 컴포넌트
+import React, { Component } from 'react';
+
+class Counter extends Component {
+  render() {
+    return (
+      <div>
+        <h1>0</h1>
+        <button>+1</button>
+        <button>-1</button>
+      </div>
+    );
+  }
+}
+
+export default Counter;
 
 /*
 // useReducer 를 사용하여 상태 업데이트 로직 분리하기
@@ -53,7 +69,7 @@ const [state, dispatch] = useReducer(reducer, initialState);
 // useReducer 에 넣는 첫번째 파라미터는 reducer 함수이고, 두번째 파라미터는 초기 상태다.
 
 
-*/
+
 
 import React, { useReducer } from 'react';
 
@@ -89,7 +105,7 @@ function Counter() {
 }
 
 export default Counter;
-
+*/
 
 /*
 //함수형 업데이트
