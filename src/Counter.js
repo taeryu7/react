@@ -1,20 +1,398 @@
 
+
+/*
 // 클래스형 컴포넌트
 import React, { Component } from 'react';
 
 class Counter extends Component {
+  handleIncrease() {
+    console.log('increase');
+    console.log(this);
+  }
+
+  handleDecrease() {
+    console.log('decrease');
+  }
+
   render() {
     return (
       <div>
         <h1>0</h1>
-        <button>+1</button>
-        <button>-1</button>
+        <button onClick={this.handleIncrease}>+1</button>
+        <button onClick={this.handleDecrease}>-1</button>
       </div>
     );
   }
 }
 
 export default Counter;
+
+// 이렇게 클래스 내부에 종속된 함수를 '메서드' 라고 부른다.
+// 클래스에서 커스텀메서드를 만들 때는 보통 이름을 handle... 이라고 이름을 짓는다.
+// 정해진 규칙은 아니라서 꼭 지킬 필요는 없다.
+// 위 코드로 handleIncrease 에서 this 를 콘솔에 출력하면 undefined 가 나타나게 된다.
+// 이렇게 되는 이유는, 우리가 만든 메서드들을 각 button 들의 이벤트로 등록하게 되는 과정에서 각 메서드와 컴포넌트 인스턴스의 관계가 끊겨버리기 때문이다.
+// 이를 해결하기 위해서 할 수 있는 방법은 총 3가지 방법이 있다.
+
+
+// 1. 클래스의 생성자 메서드 constructor 에서 bind 작업을 해준다. (아래코드 참조)
+import React, { Component } from 'react';
+
+class Counter extends Component {
+  constructor(props) {
+    super(props);
+    this.handleIncrease = this.handleIncrease.bind(this);
+    this.handleDecrease = this.handleDecrease.bind(this);
+  }
+
+  handleIncrease() {
+    console.log('increase');
+    console.log(this);
+  }
+
+  handleDecrease() {
+    console.log('decrease');
+  }
+
+  render() {
+    return (
+      <div>
+        <h1>0</h1>
+        <button onClick={this.handleIncrease}>+1</button>
+        <button onClick={this.handleDecrease}>-1</button>
+      </div>
+    );
+  }
+}
+
+export default Counter;
+
+// 함수의 bind 를 사용하면, 해당 함수에서 가르킬 this 를 직접 설정해줄 수 있다.
+// constructor 에서는 props 파라미터로 받아오고 super(props) 를 호출해주어야 하는데,
+// 클래스가 컴포넌트로서 작동 할 수 있도록 해주는 Component 쪽에 구현되어있는 생성자 함수를 먼저 실행해주고, 우리가 할 작업을 하겠다 라는 것을 의미한다.
+// 이 방법이 가장 일반적인 방법이고, 또 다른 방법은 커스텀 메서드를 선언 할 때 화살표 함수 문법을 사용해서 작성한다. (아래코드 참조)
+mport React, { Component } from 'react';
+
+class Counter extends Component {
+  handleIncrease = () => {
+    console.log('increase');
+    console.log(this);
+  };
+
+  handleDecrease = () => {
+    console.log('decrease');
+  };
+
+  render() {
+    return (
+      <div>
+        <h1>0</h1>
+        <button onClick={this.handleIncrease}>+1</button>
+        <button onClick={this.handleDecrease}>-1</button>
+      </div>
+    );
+  }
+}
+
+export default Counter;
+
+// 클래스형 컴포넌트에서 화살표 함수를 사용해서 메서드를 구현 하는 것은 클래스에 특정 속성을 선언 할 수 있게 해주는 class-properties 라는 문법을 사용하는데,
+// 이 문법은 아직 정식 자바스크립트 문법이 아니다.
+// CRA 로 만든 프로젝트에는 적용이 되어있는 문법이기 때문에 바로 사용 할 수 있다.
+// CRA 로 만든 프로젝트에서는 커스텀 메서드를 만들 때 이 방법을 많이 사용한다, 그리고 가장 편한 방법이다.
+
+// 세번째는 onClick 에서 새로운 함수를 만들어서 전달을 하는 것인데 자주 사용하지 않는방법이다.
+// 렌더링 할 때마다 함수가 새로 만들어지기때문에 나중에 컴포넌트 최적화 할 때 까다롭다.
+return (
+  <div>
+    <h1>0</h1>
+    <button onClick={() => this.handleIncrease()}>+1</button>
+    <button onClick={() => this.handleDecrease()}>-1</button>
+  </div>
+);
+
+// 상태선언하기
+// 클래스형 컴포넌트에서 상태를 관리 할 때에는 state라는 것을 사용한다.
+//  state 를 선언 할 때에는 constructor 내부에서 this.state 를 설정 하면된다.
+
+import React, { Component } from 'react';
+
+class Counter extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      counter: 0
+    };
+  }
+  handleIncrease = () => {
+    console.log('increase');
+    console.log(this);
+  };
+
+  handleDecrease = () => {
+    console.log('decrease');
+  };
+
+  render() {
+    return (
+      <div>
+        <h1>{this.state.counter}</h1>
+        <button onClick={this.handleIncrease}>+1</button>
+        <button onClick={this.handleDecrease}>-1</button>
+      </div>
+    );
+  }
+}
+
+export default Counter;
+// 클래스형 컴포넌트의 state는 무조건 객체형태여야한다.
+// render 메서드에서 state를 조회할려면 this.state를 조회하면 된다.
+// 화살표 함수 문법을 사용하여 메서드를 작성 할 수 있게 해줬던 class-properties 문법이 적용되어 있다면,
+// 굳이 constructor 를 작성하지 않고도 다음과 같이 state 를 설정해줄 수 있다.
+
+import React, { Component } from 'react';
+
+class Counter extends Component {
+  state = {
+    counter: 0
+  };
+  handleIncrease = () => {
+    console.log('increase');
+    console.log(this);
+  };
+
+  handleDecrease = () => {
+    console.log('decrease');
+  };
+
+  render() {
+    return (
+      <div>
+        <h1>{this.state.counter}</h1>
+        <button onClick={this.handleIncrease}>+1</button>
+        <button onClick={this.handleDecrease}>-1</button>
+      </div>
+    );
+  }
+}
+
+export default Counter;
+
+
+// 상태 업데이트하기
+// 상태를 업데이트해야 할 때에는 this.setState 함수를 사용한다.
+
+import React, { Component } from 'react';
+
+class Counter extends Component {
+  state = {
+    counter: 0
+  };
+  handleIncrease = () => {
+    this.setState({
+      counter: this.state.counter + 1
+    });
+  };
+
+  handleDecrease = () => {
+    this.setState({
+      counter: this.state.counter - 1
+    });
+  };
+
+  render() {
+    return (
+      <div>
+        <h1>{this.state.counter}</h1>
+        <button onClick={this.handleIncrease}>+1</button>
+        <button onClick={this.handleDecrease}>-1</button>
+      </div>
+    );
+  }
+}
+
+export default Counter;
+
+// this.setState 를 사용 할 떄는 위 코드 처럼 객체 안에 업데이트 하고 싶은 값을 넣어서 호출해주면 되는데, 만약 다음과 같이 state에 다른값이 있다면
+import React, { Component } from 'react';
+
+class Counter extends Component {
+  state = {
+    counter: 0,
+    fixed: 1
+  };
+  handleIncrease = () => {
+    this.setState({
+      counter: this.state.counter + 1
+    });
+  };
+
+  handleDecrease = () => {
+    this.setState({
+      counter: this.state.counter - 1
+    });
+  };
+
+  render() {
+    return (
+      <div>
+        <h1>{this.state.counter}</h1>
+        <button onClick={this.handleIncrease}>+1</button>
+        <button onClick={this.handleDecrease}>-1</button>
+        <p>고정된 값: {this.state.fixed}</p>
+      </div>
+    );
+  }
+}
+
+export default Counter;
+
+// this.setState 를 할 때 파라미터에 넣는 객체에 fixed 값을 넣어주지 않아도 값이 유지된다.
+// 하지만, 클래스형 컴포넌트의 state 에서 객체 형태의 상태를 관리해야 한다면, 불변성을 관리해줘가면서 업데이트를 해야한다. (아래는 예제)
+state = {
+  counter: 0,
+  fixed: 1,
+  updateMe: {
+    toggleMe: false,
+    dontChangeMe: 1
+  }
+};
+
+handleToggle = () => {
+  this.setState({
+    updateMe: {
+      ...this.state.updateMe,
+      toggleMe: !this.state.updateMe.toggleMe
+    }
+  });
+};
+
+// setState 의 함수형 업데이트
+import React, { Component } from 'react';
+
+class Counter extends Component {
+  state = {
+    counter: 0,
+    fixed: 1
+  };
+  handleIncrease = () => {
+    this.setState(state => ({
+      counter: state.counter + 1
+    }));
+  };
+
+  handleDecrease = () => {
+    this.setState(state => ({
+      counter: state.counter - 1
+    }));
+  };
+
+  render() {
+    return (
+      <div>
+        <h1>{this.state.counter}</h1>
+        <button onClick={this.handleIncrease}>+1</button>
+        <button onClick={this.handleDecrease}>-1</button>
+        <p>고정된 값: {this.state.fixed}</p>
+      </div>
+    );
+  }
+}
+
+export default Counter;
+// 함수형 업데이트는 보통 한 함수에서 setState를 여러번에 걸쳐서 사용하는 경우에 쓰면 유용하다.
+// 아래 코드는 setState 를 두번 사용하면서 state.counter 값에 1을 더해주는 작업을 두번주지만, 실제로 2가 더해지지는 않는다.
+
+handleIncrease = () => {
+  this.setState({
+    counter: this.state.counter + 1
+  });
+  this.setState({
+    counter: this.state.counter + 1
+  });
+};
+
+// 다음과 같이 함수형 업데이트로 처리해주면 값이 2씩 더해진다.
+
+import React, { Component } from 'react';
+
+class Counter extends Component {
+  state = {
+    counter: 0,
+    fixed: 1
+  };
+  handleIncrease = () => {
+    this.setState(state => ({
+      counter: state.counter + 1
+    }));
+    this.setState(state => ({
+      counter: state.counter + 1
+    }));
+  };
+
+  handleDecrease = () => {
+    this.setState(state => ({
+      counter: state.counter - 1
+    }));
+  };
+
+  render() {
+    return (
+      <div>
+        <h1>{this.state.counter}</h1>
+        <button onClick={this.handleIncrease}>+1</button>
+        <button onClick={this.handleDecrease}>-1</button>
+        <p>고정된 값: {this.state.fixed}</p>
+      </div>
+    );
+  }
+}
+
+export default Counter;
+
+//업데이트 할 객체를 넣어주는 setState 에서 2씩 더해지지 않는 이유는 setState 를 한다고 해서 상태가 바로 바뀌는게 아니기 때문이다.
+// setState 는 단순히 상태를 바꾸는 함수가 아니라 상태로 바꿔달라고 요청해주는 함수로 이해를 해야한다.
+// 성능적인 이유 때문에 리액트에서는 상태가 바로 업데이트 되지 않고 비동기적으로 업데이트가 된다.
+
+//만약 상태가 업데이트 되고 나서 어떤 작업을 하고 싶다면 아래처럼 setState 의 두번째 파라미터에 콜백함수를 넣어줄 수도 있다.
+mport React, { Component } from 'react';
+
+class Counter extends Component {
+  state = {
+    counter: 0,
+    fixed: 1
+  };
+  handleIncrease = () => {
+    this.setState(
+      {
+        counter: this.state.counter + 1
+      },
+      () => {
+        console.log(this.state.counter);
+      }
+    );
+  };
+
+  handleDecrease = () => {
+    this.setState(state => ({
+      counter: state.counter - 1
+    }));
+  };
+
+  render() {
+    return (
+      <div>
+        <h1>{this.state.counter}</h1>
+        <button onClick={this.handleIncrease}>+1</button>
+        <button onClick={this.handleDecrease}>-1</button>
+        <p>고정된 값: {this.state.fixed}</p>
+      </div>
+    );
+  }
+}
+
+export default Counter;
+*/
 
 /*
 // useReducer 를 사용하여 상태 업데이트 로직 분리하기

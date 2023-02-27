@@ -1,5 +1,8 @@
 
+/*
 // 클래스형 컴포넌트
+
+
 import React, { Component } from 'react';
 
 class Hello extends Component {
@@ -20,6 +23,30 @@ Hello.defaultProps = {
 
 export default Hello;
 
+// 클래스형 컴포넌트에는 render() 메서드가 꼭 있어야된다.
+// 이 메서드에서 렌더링하고싶은 JSX를 반환하면 된다. 그리고 props를 조회 할 때 this.props를 조회하면 된다.
+// defaultProps 를 설정하는 것은 이전 함수형 컴포넌트에서 했을 때와 똑같이 해도되고, 아래처럼 클래스 내부에 static 키워드와 함께 선언 할 수 있다.
+
+import React, { Component } from 'react';
+
+class Hello extends Component {
+  static defaultProps = {
+    name: '이름없음'
+  };
+  render() {
+    const { color, name, isSpecial } = this.props;
+    return (
+      <div style={{ color }}>
+        {isSpecial && <b>*</b>}
+        안녕하세요 {name}
+      </div>
+    );
+  }
+}
+
+export default Hello;
+
+*/
 
 /*
 import React from 'react';
